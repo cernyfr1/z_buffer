@@ -56,9 +56,28 @@ public class Triangler {
 
     void drawSecondHalf(Vertex a, Vertex b, Vertex c){
         //TODO
+        final int yMin = (int)b.getPosition().getY();
+        final double yMax = c.getPosition().getY();
+
+        for (int y = yMin; y < yMax; y++){
+            final double t1 = (y - a.getPosition().getY()) / (c.getPosition().getY() - a.getPosition().getY());
+            final double t2 = (y - b.getPosition().getY()) / (c.getPosition().getY() - b.getPosition().getY());
+            final Vertex v1 = lerp.compute(a, c, t1);
+            final Vertex v2 = lerp.compute(b, c, t2);
+            final Vertex vMin = (v1.getPosition().getX() < v2.getPosition().getX())? v1 : v2;
+            final Vertex vMax = (vMin == v1)? v2 : v1;
+            final int xMin = (int) vMin.getPosition().getX();
+            final int xMax = (int) vMax.getPosition().getX();
+
+            for (int x = xMin; x < xMax; x++){
+                final double t = (x - xMin) / (xMax - xMin);
+                final Vertex v = lerp.compute(vMin, vMax, t);
+                colorRaster.setPixel(x, y, v.getColor());
+            }
+        }
     }
 
-    void draw(Vertex v1, Vertex v2, Vertex v3){
+    public void draw(Vertex v1, Vertex v2, Vertex v3){
         List<Vertex> ordered = ordered(v1, v2, v3);
         drawFirstHalf(ordered.get(0), ordered.get(1), ordered.get(2));
         drawSecondHalf(ordered.get(0), ordered.get(1), ordered.get(2));
