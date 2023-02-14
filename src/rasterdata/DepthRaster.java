@@ -34,7 +34,7 @@ public class DepthRaster implements Raster<Double>{
 
     @Override
     public Optional<Double> getPixel(int x, int y) {
-        if(x > 0 && x < getWidth() && y > 0 && y < getHeight()){
+        if(isValidAddress(x, y)){
             return Optional.of(array[x][y]);
         }
 
