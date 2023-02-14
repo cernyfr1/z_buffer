@@ -4,6 +4,7 @@ import linalg.Lerp;
 import objectdata.Vertex;
 import rasterdata.ColorRaster;
 import rasterdata.Raster;
+import rasterdata.ZBuffer;
 import transforms.Col;
 
 import java.util.Comparator;
@@ -13,10 +14,11 @@ import java.util.stream.Stream;
 public class Triangler {
 
     private final Lerp lerp = new Lerp();
-    private final Raster<Col> colorRaster;
+    //private final Raster<Col> colorRaster;
+    private final ZBuffer zBuffer;
 
-    public Triangler(Raster<Col> colorRaster) {
-        this.colorRaster = colorRaster;
+    public Triangler(ZBuffer zBuffer) {
+        this.zBuffer = zBuffer;
     }
 
     private List<Vertex> ordered(Vertex v1, Vertex v2, Vertex v3){
@@ -44,12 +46,12 @@ public class Triangler {
             final Vertex vMin = (v1.getPosition().getX() < v2.getPosition().getX())? v1 : v2;
             final Vertex vMax = (vMin == v1)? v2 : v1;
             final int xMin = (int) vMin.getPosition().getX();
-            final int xMax = (int) vMax.getPosition().getX();
+            final double xMax = vMax.getPosition().getX();
 
             for (int x = xMin; x < xMax; x++){
                 final double t = (x - xMin) / (xMax - xMin);
                 final Vertex v = lerp.compute(vMin, vMax, t);
-                colorRaster.setPixel(x, y, v.getColor());
+                zBuffer.setPixel(x, y, v.getPosition().getZ(), v.getColor());
             }
         }
     }
@@ -67,12 +69,12 @@ public class Triangler {
             final Vertex vMin = (v1.getPosition().getX() < v2.getPosition().getX())? v1 : v2;
             final Vertex vMax = (vMin == v1)? v2 : v1;
             final int xMin = (int) vMin.getPosition().getX();
-            final int xMax = (int) vMax.getPosition().getX();
+            final double xMax = vMax.getPosition().getX();
 
             for (int x = xMin; x < xMax; x++){
                 final double t = (x - xMin) / (xMax - xMin);
                 final Vertex v = lerp.compute(vMin, vMax, t);
-                colorRaster.setPixel(x, y, v.getColor());
+                zBuffer.setPixel(x, y, v.getPosition().getZ(), v.getColor());
             }
         }
     }

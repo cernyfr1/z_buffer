@@ -13,6 +13,7 @@ public class Canvas {
     private final JFrame frame;
     private final JPanel panel;
     private final ColorRaster img;
+    private final ZBuffer zBuffer;
 
     public Canvas(int width, int height) {
         frame = new JFrame();
@@ -21,6 +22,7 @@ public class Canvas {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         img = new ColorRaster(width, height, new Col(50, 50, 50));
+        zBuffer = new ZBuffer(img);
         panel = new JPanel() {
             private static final long serialVersionUID = 1L;
 
@@ -44,8 +46,8 @@ public class Canvas {
         Vertex v3 = new Vertex(new Vec3D(250, 150, 0.5), new Col(0, 0, 255));
 
         Vertex v4 = new Vertex(new Vec3D(50, 400, 0.7), new Col(255, 0, 0));
-        Vertex v5 = new Vertex(new Vec3D(300, 100, 0.2), new Col(255, 0, 0));
-        Vertex v6 = new Vertex(new Vec3D(400, 300, 0.5), new Col(255, 0, 0));
+        Vertex v5 = new Vertex(new Vec3D(300, 100, 0.2), new Col(0, 0, 255));
+        Vertex v6 = new Vertex(new Vec3D(400, 300, 0.5), new Col(0, 255, 0));
 
         Vertex v7 = new Vertex(new Vec3D(300, 50, 0.7), new Col(0, 255, 0));
         Vertex v8 = new Vertex(new Vec3D(50, 150, 0.3), new Col(0, 255, 0));
@@ -55,7 +57,7 @@ public class Canvas {
         Vertex v11 = new Vertex(new Vec3D(20, 160, 0.9), new Col(0, 0, 255));
         Vertex v12 = new Vertex(new Vec3D(250, 450, 0.6), new Col(0, 0, 255));
 
-        Triangler triangler = new Triangler(img);
+        Triangler triangler = new Triangler(zBuffer);
 
         // TEST TRIANGLER
         triangler.draw(v1, v2, v3);
