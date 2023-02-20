@@ -61,11 +61,12 @@ public class Canvas3D {
         cube = new Cube();
         pyramid = new Pyramid();
 //        pyramid.setModel(pyramid.getModel().mul(new Mat4Transl(4, 0,0)));
-        selectedSolid = null;
+        selectedSolid = pyramid;
 //        sinWave = new SinWave();
 //        sinWave.setModel(sinWave.getModel().mul(new Mat4Transl(8,0,0)));
 //        solids.add(cube);
         solids.add(pyramid);
+//        solids.add(triangle);
 //        solids.add(sinWave);
         runAnimation = false;
 
@@ -281,10 +282,14 @@ public class Canvas3D {
     }
 
     public void display(){
-        raster.clear();
+        zBuffer.clear();
         wireRenderer.setView(camera.getViewMatrix());
 
-        wireRenderer.renderScene(solids);
+       wireRenderer.renderScene(solids);
+//        Vertex v1 = new Vertex(new Vec3D(50, 50, 0.5), new Col(255, 0, 0));
+//        Vertex v2 = new Vertex(new Vec3D(150, 400, 0.5), new Col(0, 255, 0));
+//        Vertex v3 = new Vertex(new Vec3D(250, 150, 0.5), new Col(0, 0, 255));
+//        triangler.draw(v1, v2, v3);
 //        wireRenderer.renderAxis(true, true, true);
 
         panel.repaint();

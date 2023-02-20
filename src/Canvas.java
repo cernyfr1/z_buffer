@@ -41,8 +41,8 @@ public class Canvas {
     }
 
     public void start() {
-        Vertex v1 = new Vertex(new Vec3D(50, 50, 0.5), new Col(255, 0, 0));
-        Vertex v2 = new Vertex(new Vec3D(150, 400, 0.5), new Col(0, 255, 0));
+        Vertex v1 = new Vertex(new Vec3D(350, 50, 0.5), new Col(255, 0, 0));
+        Vertex v2 = new Vertex(new Vec3D(350, 400, 0.5), new Col(0, 255, 0));
         Vertex v3 = new Vertex(new Vec3D(250, 150, 0.5), new Col(0, 0, 255));
 
         Vertex v4 = new Vertex(new Vec3D(50, 400, 0.7), new Col(255, 0, 0));
@@ -59,7 +59,7 @@ public class Canvas {
 
         Triangler triangler = new Triangler(zBuffer);
 
-        // TEST TRIANGLER
+        // TEST TRIANGLERa
         triangler.draw(v1, v2, v3);
 
         // TEST ZBUFFER

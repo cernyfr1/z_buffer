@@ -10,7 +10,7 @@ public interface Raster<P> {
     Optional<P> getPixel(int x, int y);
     void clear();
     default boolean isValidAddress(int x, int y){
-       return x > 0 && x < getWidth() && y > 0 && y < getHeight();
+       return x >= 0 && x < getWidth() && y >= 0 && y < getHeight();
     }
 
 }
