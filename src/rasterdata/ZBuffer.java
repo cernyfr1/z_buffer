@@ -23,4 +23,11 @@ public class ZBuffer {
         colorRaster.clear();
         depthRaster.clear();
     }
+
+    public int getWidth(){
+        return colorRaster.getWidth();
+    }
+    public int getHeight(){
+        return colorRaster.getHeight();
+    }
 }

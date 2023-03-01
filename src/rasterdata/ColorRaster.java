@@ -54,4 +54,8 @@ public class ColorRaster implements Raster<Col>{
     public void present(Graphics g){
         g.drawImage(image, 0, 0, null);
     }
+
+    public BufferedImage getImage() {
+        return image;
+    }
 }

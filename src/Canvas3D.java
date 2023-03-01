@@ -1,12 +1,7 @@
-
-
-import objectdata.solids.Cube;
-import objectdata.solids.Pyramid;
-import objectdata.solids.Solid;
+import objectdata.solids.*;
+import objectops.Renderer3D;
 import rasterdata.ColorRaster;
 import rasterdata.ZBuffer;
-import rasterops.Renderer;
-import rasterops.Triangler;
 import transforms.*;
 
 import javax.swing.*;
@@ -24,16 +19,9 @@ public class Canvas3D {
     private final JPanel panel;
     private final ColorRaster raster;
     private final Col backgroundColor = new Col(0x000000);
-//    private final LineRasterizer lineRasterizer;
-//    private final WireRenderer wireRenderer;
-    private final Renderer wireRenderer;
-    private final Triangler triangler;
+    private final Renderer3D renderer3D;
     private final ZBuffer zBuffer;
-    private List<Solid> solids;
-    private Solid selectedSolid;
-    private final Cube cube;
-    private final Pyramid pyramid;
-//    private final SinWave sinWave;
+    private NewSolid selectedSolid;
     private Mat4 prespProj;
     private Mat4 orthProj;
     private Camera camera;
@@ -41,6 +29,7 @@ public class Canvas3D {
     private int cameraX, cameraY, rotationX, rotationY, translationX, translationY;
     private Boolean runAnimation;
     private int editMode = 0;
+    private List<NewSolid> solids = new ArrayList<>();
 
     public Canvas3D(int width, int height) {
 
@@ -55,19 +44,12 @@ public class Canvas3D {
 
         raster = new ColorRaster(width, height, backgroundColor);
         zBuffer = new ZBuffer(raster);
-//        lineRasterizer = new GraphicsLineRasterizer(raster);
 
-        solids = new ArrayList<>();
-        cube = new Cube();
-        pyramid = new Pyramid();
-//        pyramid.setModel(pyramid.getModel().mul(new Mat4Transl(4, 0,0)));
-        selectedSolid = pyramid;
-//        sinWave = new SinWave();
-//        sinWave.setModel(sinWave.getModel().mul(new Mat4Transl(8,0,0)));
-//        solids.add(cube);
-        solids.add(pyramid);
-//        solids.add(triangle);
-//        solids.add(sinWave);
+
+        Arrow arrow = new Arrow();
+        solids.add(arrow);
+        selectedSolid = arrow;
+
         runAnimation = false;
 
         prespProj = new Mat4PerspRH(Math.toRadians(60), height/(double)width, 0.1, 50);
@@ -79,18 +61,14 @@ public class Canvas3D {
                 10,
                 false);
 
-
-
-        triangler = new Triangler(zBuffer);
-        wireRenderer = new Renderer(triangler, camera.getViewMatrix(), prespProj, width, height);
-//        wireRenderer.setSelectedSolid(selectedSolid);
+        renderer3D = new Renderer3D(zBuffer, prespProj, selectedSolid);
 
         Runnable animation = () ->{
             try {
                 while (true){
                     if (runAnimation) {
                         double step = Math.toRadians(1);
-                        cube.setModel(cube.getModel().mul(new Mat4RotXYZ(step, step, step)));
+                        arrow.setModel(arrow.getModel().mul(new Mat4RotXYZ(step, step, step)));
                         display();
                         TimeUnit.MILLISECONDS.sleep(10);
                     }
@@ -130,12 +108,12 @@ public class Canvas3D {
                     display();
                 }
                 if (e.getKeyCode() == KeyEvent.VK_O) {
-                    wireRenderer.setProj(orthProj);
+                    renderer3D.setProjMatrix(orthProj);
                     System.out.println("orth");
                     display();
                 }
                 if (e.getKeyCode() == KeyEvent.VK_P){
-                    wireRenderer.setProj(prespProj);
+                    renderer3D.setProjMatrix(prespProj);
                     System.out.println("presp");
                     display();
                 }
@@ -277,20 +255,14 @@ public class Canvas3D {
             }else selectedSolid = solids.get(solids.indexOf(selectedSolid) + 1);
         }
         else {selectedSolid = solids.get(0);}
-        wireRenderer.setSelectedSolid(selectedSolid);
+        renderer3D.setSelectedSolid(selectedSolid);
         display();
     }
 
     public void display(){
         zBuffer.clear();
-        wireRenderer.setView(camera.getViewMatrix());
 
-       wireRenderer.renderScene(solids);
-//        Vertex v1 = new Vertex(new Vec3D(50, 50, 0.5), new Col(255, 0, 0));
-//        Vertex v2 = new Vertex(new Vec3D(150, 400, 0.5), new Col(0, 255, 0));
-//        Vertex v3 = new Vertex(new Vec3D(250, 150, 0.5), new Col(0, 0, 255));
-//        triangler.draw(v1, v2, v3);
-//        wireRenderer.renderAxis(true, true, true);
+        renderer3D.renderScene(solids, camera.getViewMatrix());
 
         panel.repaint();
     }

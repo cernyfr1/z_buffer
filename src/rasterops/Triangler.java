@@ -57,7 +57,6 @@ public class Triangler {
     }
 
     void drawSecondHalf(Vertex a, Vertex b, Vertex c){
-        //TODO
         final int yMin = (int)b.getPosition().getY();
         final double yMax = c.getPosition().getY();
 
