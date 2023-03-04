@@ -21,7 +21,7 @@ public class Canvas3D {
     private final Col backgroundColor = new Col(0x000000);
     private final Renderer3D renderer3D;
     private final ZBuffer zBuffer;
-    private NewSolid selectedSolid;
+    private Solid selectedSolid;
     private Mat4 prespProj;
     private Mat4 orthProj;
     private Camera camera;
@@ -29,7 +29,7 @@ public class Canvas3D {
     private int cameraX, cameraY, rotationX, rotationY, translationX, translationY;
     private Boolean runAnimation;
     private int editMode = 0;
-    private List<NewSolid> solids = new ArrayList<>();
+    private List<Solid> solids = new ArrayList<>();
 
     public Canvas3D(int width, int height) {
 
@@ -47,7 +47,10 @@ public class Canvas3D {
 
 
         Arrow arrow = new Arrow();
+        Cube cube = new Cube();
+
         solids.add(arrow);
+        solids.add(cube);
         selectedSolid = arrow;
 
         runAnimation = false;

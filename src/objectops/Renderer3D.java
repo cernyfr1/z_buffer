@@ -2,7 +2,7 @@ package objectops;
 
 import linalg.Lerp;
 import objectdata.Vertex;
-import objectdata.solids.NewSolid;
+import objectdata.solids.Solid;
 import objectdata.solids.Part;
 import rasterdata.ZBuffer;
 import rasterops.Liner;
@@ -22,9 +22,9 @@ public class Renderer3D {
     private final Lerp lerp = new Lerp();
     private final Liner liner;
     private Mat4 projMatrix;
-    private NewSolid selectedSolid;
+    private Solid selectedSolid;
 
-    public Renderer3D(ZBuffer zBuffer, Mat4 projMatrix, NewSolid selectedSolid){
+    public Renderer3D(ZBuffer zBuffer, Mat4 projMatrix, Solid selectedSolid){
         this.selectedSolid = selectedSolid;
         this.projMatrix = projMatrix;
         this.rasterWidth = zBuffer.getWidth();
@@ -34,15 +34,15 @@ public class Renderer3D {
 
     }
 
-    public void renderScene(List<NewSolid> solids, Mat4 viewMatrix){
+    public void renderScene(List<Solid> solids, Mat4 viewMatrix){
         final Mat4 VP = viewMatrix.mul(projMatrix);
-        for (NewSolid s : solids) {
+        for (Solid s : solids) {
             drawSolid(s, s.getModel().mul(VP));
         }
 
     }
 
-    private void drawSolid(NewSolid solid, Mat4 transformation){
+    private void drawSolid(Solid solid, Mat4 transformation){
         final List<Vertex> vertices = new ArrayList<>();
         for (int i = 0; i < solid.getVertices().size(); i++){
             vertices.add(solid.getVertices().get(i).transformed(transformation));
@@ -158,7 +158,7 @@ public class Renderer3D {
     public void setProjMatrix(Mat4 projMatrix){
         this.projMatrix = projMatrix;
     }
-    public  void setSelectedSolid(NewSolid selectedSolid){
+    public  void setSelectedSolid(Solid selectedSolid){
         this.selectedSolid = selectedSolid;
     }
 }

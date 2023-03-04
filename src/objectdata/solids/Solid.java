@@ -5,7 +5,7 @@ import transforms.Mat4;
 
 import java.util.List;
 
-public interface NewSolid {
+public interface Solid {
 
     List<Vertex> getVertices();
     List<Integer> getIndices();
