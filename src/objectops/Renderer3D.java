@@ -10,7 +10,9 @@ import rasterops.Triangler;
 import transforms.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Renderer3D {
 
@@ -72,11 +74,17 @@ public class Renderer3D {
                         final Vertex v2 = vertices.get(indices.get(i + 1));
                         final Vertex v3 = vertices.get(indices.get(i + 2));
                         if (!isOutOfView(List.of(v1, v2, v3))) {
+                            //clipZ
+                            final List<Vertex> triangles = clipZ(v1, v2, v3);
 
-                            Vertex v1Final = v1.dehomog().toViewport(rasterWidth, rasterHeight);
-                            Vertex v2Final = v2.dehomog().toViewport(rasterWidth, rasterHeight);
-                            Vertex v3Final = v3.dehomog().toViewport(rasterWidth, rasterHeight);
+                            Vertex v1Final = triangles.get(0).dehomog().toViewport(rasterWidth, rasterHeight);
+                            Vertex v2Final = triangles.get(1).dehomog().toViewport(rasterWidth, rasterHeight);
+                            Vertex v3Final = triangles.get(2).dehomog().toViewport(rasterWidth, rasterHeight);
 
+                            if (triangles.size() == 4){
+                                Vertex v1BFinal = triangles.get(3).dehomog().toViewport(rasterWidth, rasterHeight);
+                                triangler.draw(v1BFinal, v2Final, v3Final);
+                            }
                             triangler.draw(v1Final, v2Final, v3Final);
                         }
                     }
@@ -116,13 +124,36 @@ public class Renderer3D {
     }
 
     private List<Vertex> clipZ(Vertex v1, Vertex v2, Vertex v3){
-        //TODO
         //sort vertices by Z
-        //if last.z < 0
-            //if middle.z < 0
-                //return one triangle
-            //else return two triangles
-        return null;
+        List<Vertex> ordered = Stream.of(v1, v2, v3).sorted(new Comparator<Vertex>() {
+            @Override
+            public int compare(Vertex o1, Vertex o2) {
+                if (o1.getPosition().getZ() < o2.getPosition().getZ()){
+                    return -1;}
+                else if (o1.getPosition().getZ() > o2.getPosition().getZ()){
+                    return 1;}
+                return 0;
+            }
+        }).toList();
+        if (ordered.get(1).getPosition().getZ() >= 0){ //je prostredni uvnitr?
+            if (ordered.get(0).getPosition().getZ() >= 0){ //je prvni uvnitr?
+                return ordered;
+            }
+            else { // return dva trojuhelniky
+                final double t1 = (0 - v1.getPosition().getZ()) / (v2.getPosition().getZ() - v1.getPosition().getZ());
+                final double t2 = (0 - v1.getPosition().getY()) / (v3.getPosition().getZ() - v1.getPosition().getZ());
+                final Vertex v1A = lerp.compute(v1, v2, t1);
+                final Vertex v1B = lerp.compute(v1, v3, t2);
+                return List.of(v1A, v2, v3, v1B);
+            }
+        }
+        else { //return oriznuty trojuhelnik
+            final double t1 = (0 - v2.getPosition().getZ()) / (v3.getPosition().getZ() - v2.getPosition().getZ());
+            final double t2 = (0 - v1.getPosition().getY()) / (v3.getPosition().getZ() - v1.getPosition().getZ());
+            final Vertex v2New = lerp.compute(v2, v3, t1);
+            final Vertex v1New = lerp.compute(v1, v3, t2);
+            return List.of(v1New, v2New, v3);
+        }
     }
     public void setProjMatrix(Mat4 projMatrix){
         this.projMatrix = projMatrix;

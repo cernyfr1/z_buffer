@@ -21,10 +21,10 @@ public class Arrow implements NewSolid{
                 new Vertex(new Point3D(0.8,0,0), new Col(255,255,255)),
                 new Vertex(new Point3D(1.0,0,0), new Col(255,0,0)),
 
-                new Vertex(new Point3D(0.8,-0.2,0.2), new Col(255,255,255)),
-                new Vertex(new Point3D(0.8,-0.2,-0.2), new Col(255,255,255)),
-                new Vertex(new Point3D(0.8,0.2,0.2), new Col(255,255,255)),
-                new Vertex(new Point3D(0.8,0.2,-0.2), new Col(255,255,255))
+                new Vertex(new Point3D(0.8,-0.2,0.2), new Col(255,0,0)),
+                new Vertex(new Point3D(0.8,-0.2,-0.2), new Col(255,0,0)),
+                new Vertex(new Point3D(0.8,0.2,0.2), new Col(255,0,0)),
+                new Vertex(new Point3D(0.8,0.2,-0.2), new Col(255,0,0))
         );
 
         indices = List.of(

@@ -15,19 +15,34 @@ public class Liner {
 
     public void draw(Vertex v1, Vertex v2){
 
-        final Vertex vMin = (v1.getPosition().getY() < v2.getPosition().getY()) ? v1 : v2;
-        final Vertex vMax = (vMin == v1) ? v2 : v1;
+        final double deltaX = Math.abs(v2.getPosition().getX() - v1.getPosition().getX());
+        final double deltaY = Math.abs(v2.getPosition().getY() - v1.getPosition().getY());
 
-        final int min = (int)vMin.getPosition().getY();
-        final double max = vMax.getPosition().getY();
+        if (deltaX > deltaY){
+            final Vertex vMin = (v1.getPosition().getX() < v2.getPosition().getX()) ? v1 : v2;
+            final Vertex vMax = (vMin == v1) ? v2 : v1;
 
-        for (int y = min; y < max; y++){
-            final double t = (y - vMin.getPosition().getY())/(vMax.getPosition().getY() - vMin.getPosition().getY());
-            final Vertex v = lerp.compute(vMin, vMax, t);
-            zBuffer.setPixel((int)v.getPosition().getX(), (int)v.getPosition().getY(), v.getPosition().getZ(), v.getColor());
+            final int min = (int)vMin.getPosition().getX();
+            final double max = vMax.getPosition().getX();
+
+            for (int x = min; x < max; x++){
+                final double t = (x - vMin.getPosition().getX())/(vMax.getPosition().getX() - vMin.getPosition().getX());
+                final Vertex v = lerp.compute(vMin, vMax, t);
+                zBuffer.setPixel((int)Math.round(v.getPosition().getX()), (int)Math.round(v.getPosition().getY()), v.getPosition().getZ(), v.getColor());
+            }
+        }else {
+
+            final Vertex vMin = (v1.getPosition().getY() < v2.getPosition().getY()) ? v1 : v2;
+            final Vertex vMax = (vMin == v1) ? v2 : v1;
+
+            final int min = (int) vMin.getPosition().getY();
+            final double max = vMax.getPosition().getY();
+
+            for (int y = min; y < max; y++) {
+                final double t = (y - vMin.getPosition().getY()) / (vMax.getPosition().getY() - vMin.getPosition().getY());
+                final Vertex v = lerp.compute(vMin, vMax, t);
+                zBuffer.setPixel((int)Math.round(v.getPosition().getX()), (int)Math.round(v.getPosition().getY()), v.getPosition().getZ(), v.getColor());
+            }
         }
-
-
-        //TODO: main axis fix
     }
 }
