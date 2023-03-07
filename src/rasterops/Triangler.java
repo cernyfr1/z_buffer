@@ -3,6 +3,7 @@ package rasterops;
 import linalg.Lerp;
 import objectdata.Vertex;
 import rasterdata.ZBuffer;
+import transforms.Col;
 
 import java.util.Comparator;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Triangler {
         }).toList();
     }
 
-    void drawFirstHalf(Vertex a, Vertex b, Vertex c){  //TODO: implementovat orezani
+    void drawFirstHalf(Vertex a, Vertex b, Vertex c, Col color){  //TODO: implementovat orezani
         final int yMin = (int)a.getPosition().getY();
         final double yMax = b.getPosition().getY();
 
@@ -48,13 +49,14 @@ public class Triangler {
                 for (int x = xMin; x < xMax; x++) {
                     final double t = (x - xMin) / (xMax - xMin);
                     final Vertex v = lerp.compute(vMin, vMax, t);
-                    zBuffer.setPixel(x, y, v.getPosition().getZ(), v.getColor());
+
+                    zBuffer.setPixel(x, y, v.getPosition().getZ(), (color == null) ? v.getColor() : color);
                 }
             }
         }
     }
 
-    void drawSecondHalf(Vertex a, Vertex b, Vertex c){
+    void drawSecondHalf(Vertex a, Vertex b, Vertex c, Col color){
         final int yMin = (int)b.getPosition().getY();
         final double yMax = c.getPosition().getY();
         for (int y = yMin; y < yMax; y++) {
@@ -71,16 +73,16 @@ public class Triangler {
                 for (int x = xMin; x < xMax; x++) {
                     final double t = (x - xMin) / (xMax - xMin);
                     final Vertex v = lerp.compute(vMin, vMax, t);
-                    zBuffer.setPixel(x, y, v.getPosition().getZ(), v.getColor());
+                    zBuffer.setPixel(x, y, v.getPosition().getZ(), (color == null) ? v.getColor() : color);
                 }
             }
         }
     }
 
-    public void draw(Vertex v1, Vertex v2, Vertex v3){
+    public void draw(Vertex v1, Vertex v2, Vertex v3, Col color){
         List<Vertex> ordered = ordered(v1, v2, v3);
-        drawFirstHalf(ordered.get(0), ordered.get(1), ordered.get(2));
-        drawSecondHalf(ordered.get(0), ordered.get(1), ordered.get(2));
+        drawFirstHalf(ordered.get(0), ordered.get(1), ordered.get(2), color);
+        drawSecondHalf(ordered.get(0), ordered.get(1), ordered.get(2), color);
 
     }
 

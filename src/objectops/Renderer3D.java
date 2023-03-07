@@ -83,9 +83,9 @@ public class Renderer3D {
 
                             if (triangles.size() == 4){
                                 Vertex v1BFinal = triangles.get(3).dehomog().toViewport(rasterWidth, rasterHeight);
-                                triangler.draw(v1BFinal, v2Final, v3Final);
+                                triangler.draw(v1BFinal, v2Final, v3Final, part.getColor());
                             }
-                            triangler.draw(v1Final, v2Final, v3Final);
+                            triangler.draw(v1Final, v2Final, v3Final, part.getColor());
                         }
                     }
                 }
@@ -135,24 +135,29 @@ public class Renderer3D {
                 return 0;
             }
         }).toList();
-        if (ordered.get(1).getPosition().getZ() >= 0){ //je prostredni uvnitr?
-            if (ordered.get(0).getPosition().getZ() >= 0){ //je prvni uvnitr?
+
+        Vertex v1O = ordered.get(0);
+        Vertex v2O = ordered.get(1);
+        Vertex v3O = ordered.get(2);
+
+        if (v2O.getPosition().getZ() >= 0){ //je prostredni uvnitr?
+            if (v1O.getPosition().getZ() >= 0){ //je prvni uvnitr?
                 return ordered;
             }
             else { // return dva trojuhelniky
-                final double t1 = (0 - v1.getPosition().getZ()) / (v2.getPosition().getZ() - v1.getPosition().getZ());
-                final double t2 = (0 - v1.getPosition().getY()) / (v3.getPosition().getZ() - v1.getPosition().getZ());
-                final Vertex v1A = lerp.compute(v1, v2, t1);
-                final Vertex v1B = lerp.compute(v1, v3, t2);
-                return List.of(v1A, v2, v3, v1B);
+                final double t1 = (0 - v1O.getPosition().getZ()) / (v2O.getPosition().getZ() - v1O.getPosition().getZ());
+                final double t2 = (0 - v1O.getPosition().getY()) / (v3O.getPosition().getZ() - v1O.getPosition().getZ());
+                final Vertex v1A = lerp.compute(v1O, v2O, t1);
+                final Vertex v1B = lerp.compute(v1O, v3O, t2);
+                return List.of(v1A, v2O, v3O, v1B);
             }
         }
         else { //return oriznuty trojuhelnik
-            final double t1 = (0 - v2.getPosition().getZ()) / (v3.getPosition().getZ() - v2.getPosition().getZ());
-            final double t2 = (0 - v1.getPosition().getY()) / (v3.getPosition().getZ() - v1.getPosition().getZ());
-            final Vertex v2New = lerp.compute(v2, v3, t1);
-            final Vertex v1New = lerp.compute(v1, v3, t2);
-            return List.of(v1New, v2New, v3);
+            final double t1 = (0 - v2O.getPosition().getZ()) / (v3O.getPosition().getZ() - v2O.getPosition().getZ());
+            final double t2 = (0 - v1O.getPosition().getY()) / (v3O.getPosition().getZ() - v1O.getPosition().getZ());
+            final Vertex v2New = lerp.compute(v2O, v3O, t1);
+            final Vertex v1New = lerp.compute(v1O, v3O, t2);
+            return List.of(v1New, v2New, v3O);
         }
     }
     public void setProjMatrix(Mat4 projMatrix){

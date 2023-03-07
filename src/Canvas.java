@@ -62,7 +62,7 @@ public class Canvas {
         Triangler triangler = new Triangler(zBuffer);
 
         // TEST TRIANGLERa
-        triangler.draw(v1, v2, v3);
+//        triangler.draw(v1, v2, v3);
 
         // TEST ZBUFFER
 //        triangler.draw(v4, v5, v6);

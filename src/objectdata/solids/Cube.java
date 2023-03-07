@@ -38,7 +38,12 @@ public class Cube implements Solid{
         );
 
         parts = List.of(
-                new Part(Topology.TRIANGLE_LIST, 0, 12)
+                new Part(Topology.TRIANGLE_LIST, 0, 2, new Col(255,0,0)),
+                new Part(Topology.TRIANGLE_LIST, 6, 2, new Col(0,255,0)),
+                new Part(Topology.TRIANGLE_LIST, 12, 2, new Col(255,0,0)),
+                new Part(Topology.TRIANGLE_LIST, 18, 2, new Col(0,255,0)),
+                new Part(Topology.TRIANGLE_LIST, 24, 2, new Col(0,0,255)),
+                new Part(Topology.TRIANGLE_LIST, 30, 2, new Col(0,0,255))
         );
 
         model = new Mat4Identity();
