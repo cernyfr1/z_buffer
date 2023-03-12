@@ -137,6 +137,10 @@ public class Canvas3D {
                 if (e.getKeyCode() == KeyEvent.VK_SPACE){
                     runAnimation = !runAnimation;
                 }
+                if (e.getKeyCode() == KeyEvent.VK_C){
+                    renderer3D.setRenderSurfaces(!renderer3D.isRenderSurfaces());
+                    display();
+                }
             }
 
             @Override

@@ -12,6 +12,7 @@ public class Arrow implements Solid {
 
     private final List<Vertex> vertices;
     private final List<Integer> indices;
+    private final List<Integer> wireIndices;
     private final List<Part> parts;
     private Mat4 model;
 
@@ -33,6 +34,13 @@ public class Arrow implements Solid {
                 2,3,5, 2,5,6, 2,6,4, 2,4,3
         );
 
+        wireIndices = List.of(
+                0,1,
+                1,3,1,4,1,5,1,6,
+                3,4,4,6,6,5,5,3,
+                2,3,2,4,2,5,2,6
+                );
+
         parts = List.of(
                 new Part(Topology.LINE_LIST, 0, 1),
                 new Part(Topology.TRIANGLE_LIST, 2, 4),
@@ -49,6 +57,11 @@ public class Arrow implements Solid {
     @Override
     public List<Integer> getIndices() {
         return indices;
+    }
+
+    @Override
+    public List<Integer> getWireIndices() {
+        return wireIndices;
     }
 
     @Override

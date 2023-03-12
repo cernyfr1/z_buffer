@@ -23,6 +23,7 @@ public class Renderer3D {
     private final Liner liner;
     private Mat4 projMatrix;
     private Solid selectedSolid;
+    private boolean renderSurfaces;
 
     public Renderer3D(ZBuffer zBuffer, Mat4 projMatrix, Solid selectedSolid){
         this.selectedSolid = selectedSolid;
@@ -31,6 +32,7 @@ public class Renderer3D {
         this.rasterHeight = zBuffer.getHeight();
         triangler = new Triangler(zBuffer);
         liner = new Liner(zBuffer);
+        renderSurfaces = true;
 
     }
 
@@ -49,48 +51,62 @@ public class Renderer3D {
         }
         final List<Integer> indices = solid.getIndices();
 
-        for (Part part : solid.getParts()){
-            switch (part.getTopology()){
-                case LINE_LIST -> {
-                    for (int i = part.getOffset(); i < part.getOffset() + 2 * part.getCount(); i += 2) {
-                        final Vertex v1 = vertices.get(indices.get(i));
-                        final Vertex v2 = vertices.get(indices.get(i+1));
+        if (renderSurfaces) {
+            for (Part part : solid.getParts()) {
+                switch (part.getTopology()) {
+                    case LINE_LIST -> {
+                        for (int i = part.getOffset(); i < part.getOffset() + 2 * part.getCount(); i += 2) {
+                            final Vertex v1 = vertices.get(indices.get(i));
+                            final Vertex v2 = vertices.get(indices.get(i + 1));
 
-                        if (!isOutOfView(List.of(v1,v2))){
-                            final List<Vertex> line = clipZ(v1, v2);
-                            liner.draw(
-                                    line.get(0).dehomog().toViewport(rasterWidth,rasterHeight),
-                                    line.get(1).dehomog().toViewport(rasterWidth, rasterHeight)
-                            );
+                            if (!isOutOfView(List.of(v1, v2))) {
+                                final List<Vertex> line = clipZ(v1, v2);
+                                liner.draw(
+                                        line.get(0).dehomog().toViewport(rasterWidth, rasterHeight),
+                                        line.get(1).dehomog().toViewport(rasterWidth, rasterHeight)
+                                );
 
 
+                            }
+                        }
+                    }
+                    case TRIANGLE_LIST -> {
+                        for (int i = part.getOffset(); i < part.getOffset() + 3 * part.getCount(); i += 3) {
+                            final Vertex v1 = vertices.get(indices.get(i));
+                            final Vertex v2 = vertices.get(indices.get(i + 1));
+                            final Vertex v3 = vertices.get(indices.get(i + 2));
+                            if (!isOutOfView(List.of(v1, v2, v3))) {
+                                //clipZ
+                                final List<Vertex> triangles = clipZ(v1, v2, v3);
 
+                                Vertex v1Final = triangles.get(0).dehomog().toViewport(rasterWidth, rasterHeight);
+                                Vertex v2Final = triangles.get(1).dehomog().toViewport(rasterWidth, rasterHeight);
+                                Vertex v3Final = triangles.get(2).dehomog().toViewport(rasterWidth, rasterHeight);
+
+                                if (triangles.size() == 4) {
+                                    Vertex v1BFinal = triangles.get(3).dehomog().toViewport(rasterWidth, rasterHeight);
+                                    triangler.draw(v1BFinal, v2Final, v3Final, part.getColor());
+                                }
+                                triangler.draw(v1Final, v2Final, v3Final, part.getColor());
+                            }
                         }
                     }
                 }
-                case TRIANGLE_LIST -> {
-                    for (int i = part.getOffset(); i < part.getOffset() + 3*part.getCount(); i += 3) {
-                        final Vertex v1 = vertices.get(indices.get(i));
-                        final Vertex v2 = vertices.get(indices.get(i + 1));
-                        final Vertex v3 = vertices.get(indices.get(i + 2));
-                        if (!isOutOfView(List.of(v1, v2, v3))) {
-                            //clipZ
-                            final List<Vertex> triangles = clipZ(v1, v2, v3);
 
-                            Vertex v1Final = triangles.get(0).dehomog().toViewport(rasterWidth, rasterHeight);
-                            Vertex v2Final = triangles.get(1).dehomog().toViewport(rasterWidth, rasterHeight);
-                            Vertex v3Final = triangles.get(2).dehomog().toViewport(rasterWidth, rasterHeight);
+            }
+        } else {
+            for (int i = 0; i < solid.getWireIndices().size(); i += 2) {
+                final Vertex v1 = vertices.get(solid.getWireIndices().get(i));
+                final Vertex v2 = vertices.get(solid.getWireIndices().get(i + 1));
 
-                            if (triangles.size() == 4){
-                                Vertex v1BFinal = triangles.get(3).dehomog().toViewport(rasterWidth, rasterHeight);
-                                triangler.draw(v1BFinal, v2Final, v3Final, part.getColor());
-                            }
-                            triangler.draw(v1Final, v2Final, v3Final, part.getColor());
-                        }
-                    }
+                if (!isOutOfView(List.of(v1, v2))) {
+                    final List<Vertex> line = clipZ(v1, v2);
+                    liner.draw(
+                            line.get(0).dehomog().toViewport(rasterWidth, rasterHeight),
+                            line.get(1).dehomog().toViewport(rasterWidth, rasterHeight)
+                    );
                 }
             }
-
         }
     }
 
@@ -165,5 +181,13 @@ public class Renderer3D {
     }
     public  void setSelectedSolid(Solid selectedSolid){
         this.selectedSolid = selectedSolid;
+    }
+
+    public boolean isRenderSurfaces() {
+        return renderSurfaces;
+    }
+
+    public void setRenderSurfaces(boolean renderSurfaces) {
+        this.renderSurfaces = renderSurfaces;
     }
 }

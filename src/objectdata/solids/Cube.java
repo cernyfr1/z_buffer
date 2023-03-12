@@ -12,6 +12,7 @@ public class Cube implements Solid{
 
     private final List<Vertex> vertices;
     private final List<Integer> indices;
+    private final List<Integer> wireIndices;
     private final List<Part> parts;
     private Mat4 model;
 
@@ -37,6 +38,11 @@ public class Cube implements Solid{
                 4,5,7, 7,5,6
         );
 
+        wireIndices = List.of(
+                0,1,1,2,2,3,3,0,
+                4,5,5,6,6,7,7,4,
+                0,4,1,5,2,6,3,7);
+
         parts = List.of(
                 new Part(Topology.TRIANGLE_LIST, 0, 2, new Col(255,0,0)),
                 new Part(Topology.TRIANGLE_LIST, 6, 2, new Col(0,255,0)),
@@ -57,6 +63,11 @@ public class Cube implements Solid{
     @Override
     public List<Integer> getIndices() {
         return indices;
+    }
+
+    @Override
+    public List<Integer> getWireIndices() {
+        return wireIndices;
     }
 
     @Override

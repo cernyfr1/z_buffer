@@ -9,6 +9,7 @@ public interface Solid {
 
     List<Vertex> getVertices();
     List<Integer> getIndices();
+    List<Integer> getWireIndices();
     List<Part> getParts();
     Mat4 getModel();
     void setModel(Mat4 model);
