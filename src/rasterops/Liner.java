@@ -3,6 +3,7 @@ package rasterops;
 import linalg.Lerp;
 import objectdata.Vertex;
 import rasterdata.ZBuffer;
+import transforms.Col;
 
 public class Liner {
 
@@ -13,7 +14,7 @@ public class Liner {
         this.zBuffer = zBuffer;
     }
 
-    public void draw(Vertex v1, Vertex v2){
+    public void draw(Vertex v1, Vertex v2, Col color){
 
         final double deltaX = Math.abs(v2.getPosition().getX() - v1.getPosition().getX());
         final double deltaY = Math.abs(v2.getPosition().getY() - v1.getPosition().getY());
@@ -28,7 +29,7 @@ public class Liner {
             for (int x = min; x < max; x++){
                 final double t = (x - vMin.getPosition().getX())/(vMax.getPosition().getX() - vMin.getPosition().getX());
                 final Vertex v = lerp.compute(vMin, vMax, t);
-                zBuffer.setPixel((int)Math.round(v.getPosition().getX()), (int)Math.round(v.getPosition().getY()), v.getPosition().getZ(), v.getColor());
+                zBuffer.setPixel((int)Math.round(v.getPosition().getX()), (int)Math.round(v.getPosition().getY()), v.getPosition().getZ(), (color == null) ? v.getColor() : color);
             }
         }else {
 
@@ -41,7 +42,7 @@ public class Liner {
             for (int y = min; y < max; y++) {
                 final double t = (y - vMin.getPosition().getY()) / (vMax.getPosition().getY() - vMin.getPosition().getY());
                 final Vertex v = lerp.compute(vMin, vMax, t);
-                zBuffer.setPixel((int)Math.round(v.getPosition().getX()), (int)Math.round(v.getPosition().getY()), v.getPosition().getZ(), v.getColor());
+                zBuffer.setPixel((int)Math.round(v.getPosition().getX()), (int)Math.round(v.getPosition().getY()), v.getPosition().getZ(), (color == null) ? v.getColor() : color);
             }
         }
     }

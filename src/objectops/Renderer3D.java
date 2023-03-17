@@ -63,7 +63,8 @@ public class Renderer3D {
                                 final List<Vertex> line = clipZ(v1, v2);
                                 liner.draw(
                                         line.get(0).dehomog().toViewport(rasterWidth, rasterHeight),
-                                        line.get(1).dehomog().toViewport(rasterWidth, rasterHeight)
+                                        line.get(1).dehomog().toViewport(rasterWidth, rasterHeight),
+                                        part.getColor()
                                 );
 
 
@@ -103,7 +104,8 @@ public class Renderer3D {
                     final List<Vertex> line = clipZ(v1, v2);
                     liner.draw(
                             line.get(0).dehomog().toViewport(rasterWidth, rasterHeight),
-                            line.get(1).dehomog().toViewport(rasterWidth, rasterHeight)
+                            line.get(1).dehomog().toViewport(rasterWidth, rasterHeight),
+                            null
                     );
                 }
             }

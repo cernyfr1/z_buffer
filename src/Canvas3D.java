@@ -50,9 +50,12 @@ public class Canvas3D {
         Arrow arrowY = new Arrow();
         Arrow arrowZ = new Arrow();
         Cube cube = new Cube();
+        Diamond diamond = new Diamond();
 
-        arrowX.setModel(arrowX.getModel().mul(new Mat4RotY(Math.toRadians(-90))));
-        arrowZ.setModel(arrowZ.getModel().mul(new Mat4RotZ(Math.toRadians(90))));
+        arrowX.setModel(arrowX.getModel().mul(new Mat4RotY(Math.toRadians(-90))).mul(new Mat4Transl(-2,0,0)));
+        arrowY.setModel(arrowY.getModel().mul(new Mat4Transl(-2, 0,0)));
+        arrowZ.setModel(arrowZ.getModel().mul(new Mat4RotZ(Math.toRadians(90))).mul(new Mat4Transl(-2,0,0)));
+        diamond.setModel(diamond.getModel().mul(new Mat4RotX(Math.toRadians(90))).mul(new Mat4Transl(4,0,0)));
 
         for (int i = 0; i < arrowX.getParts().size(); i++) {
             arrowX.getParts().get(i).setColor(new Col(255, 0, 0));
@@ -64,6 +67,7 @@ public class Canvas3D {
         solids.add(arrowY);
         solids.add(arrowZ);
         solids.add(cube);
+        solids.add(diamond);
         selectedSolid = cube;
 
         runAnimation = false;
@@ -84,7 +88,7 @@ public class Canvas3D {
                 while (true){
                     if (runAnimation) {
                         double step = Math.toRadians(1);
-                        arrowX.setModel(arrowX.getModel().mul(new Mat4RotXYZ(step, step, step)));
+                        selectedSolid.setModel(selectedSolid.getModel().mul(new Mat4RotXYZ(step, step, step)));
                         display();
                         TimeUnit.MILLISECONDS.sleep(10);
                     }
@@ -269,12 +273,9 @@ public class Canvas3D {
     }
 
     private void selectNextSolid(){
-        if (Objects.nonNull(selectedSolid)){
-            if (solids.get(solids.size()-1).equals(selectedSolid)){
-                selectedSolid = null;
-            }else selectedSolid = solids.get(solids.indexOf(selectedSolid) + 1);
-        }
-        else {selectedSolid = solids.get(0);}
+        if (solids.get(solids.size()-1).equals(selectedSolid)){
+            selectedSolid = solids.get(0);
+        }else selectedSolid = solids.get(solids.indexOf(selectedSolid) + 1);
         renderer3D.setSelectedSolid(selectedSolid);
         display();
     }
