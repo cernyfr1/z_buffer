@@ -31,7 +31,7 @@ public class Triangler {
         }).toList();
     }
 
-    void drawFirstHalf(Vertex a, Vertex b, Vertex c, Col color){  //TODO: implementovat orezani
+    void drawFirstHalf(Vertex a, Vertex b, Vertex c, Col color){
         final int yMin = (int)a.getPosition().getY();
         final double yMax = b.getPosition().getY();
 

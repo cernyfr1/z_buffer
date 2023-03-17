@@ -46,12 +46,25 @@ public class Canvas3D {
         zBuffer = new ZBuffer(raster);
 
 
-        Arrow arrow = new Arrow();
+        Arrow arrowX = new Arrow();
+        Arrow arrowY = new Arrow();
+        Arrow arrowZ = new Arrow();
         Cube cube = new Cube();
 
-        solids.add(arrow);
+        arrowX.setModel(arrowX.getModel().mul(new Mat4RotY(Math.toRadians(-90))));
+        arrowZ.setModel(arrowZ.getModel().mul(new Mat4RotZ(Math.toRadians(90))));
+
+        for (int i = 0; i < arrowX.getParts().size(); i++) {
+            arrowX.getParts().get(i).setColor(new Col(255, 0, 0));
+            arrowY.getParts().get(i).setColor(new Col(0, 0, 255));
+            arrowZ.getParts().get(i).setColor(new Col(0, 255, 0));
+        }
+
+        solids.add(arrowX);
+        solids.add(arrowY);
+        solids.add(arrowZ);
         solids.add(cube);
-        selectedSolid = arrow;
+        selectedSolid = cube;
 
         runAnimation = false;
 
@@ -71,7 +84,7 @@ public class Canvas3D {
                 while (true){
                     if (runAnimation) {
                         double step = Math.toRadians(1);
-                        arrow.setModel(arrow.getModel().mul(new Mat4RotXYZ(step, step, step)));
+                        arrowX.setModel(arrowX.getModel().mul(new Mat4RotXYZ(step, step, step)));
                         display();
                         TimeUnit.MILLISECONDS.sleep(10);
                     }

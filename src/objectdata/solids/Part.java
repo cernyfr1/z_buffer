@@ -7,7 +7,7 @@ public class Part {
     private final Topology topology;
     private final int offset;
     private final int count;
-    private final Col color;
+    private Col color;
 
     public Part(Topology topology, int offset, int count) {
         this.topology = topology;
@@ -36,5 +36,8 @@ public class Part {
     }
     public Col getColor() {
         return color;
+    }
+    public void setColor(Col color) {
+        this.color = color;
     }
 }

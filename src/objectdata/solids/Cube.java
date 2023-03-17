@@ -17,16 +17,17 @@ public class Cube implements Solid{
     private Mat4 model;
 
     public Cube() {
+        Col white = new Col(255, 255, 255);
         vertices = List.of(
-                new Vertex(new Point3D(-0.5,0.5,-0.5), new Col(255,255,255)),
-                new Vertex(new Point3D(0.5,0.5,-0.5), new Col(255,255,255)),
-                new Vertex(new Point3D(0.5,0.5,0.5), new Col(255,0,0)),
-                new Vertex(new Point3D(-0.5,0.5,0.5), new Col(255,0,0)),
+                new Vertex(new Point3D(-0.5,0.5,-0.5), white),
+                new Vertex(new Point3D(0.5,0.5,-0.5), white),
+                new Vertex(new Point3D(0.5,0.5,0.5), white),
+                new Vertex(new Point3D(-0.5,0.5,0.5), white),
 
-                new Vertex(new Point3D(-0.5,-0.5,-0.5), new Col(255,0,0)),
-                new Vertex(new Point3D(0.5,-0.5,-0.5), new Col(255,0,0)),
-                new Vertex(new Point3D(0.5,-0.5,0.5), new Col(255,0,0)),
-                new Vertex(new Point3D(-0.5,-0.5,0.5), new Col(255,0,0))
+                new Vertex(new Point3D(-0.5,-0.5,-0.5), white),
+                new Vertex(new Point3D(0.5,-0.5,-0.5), white),
+                new Vertex(new Point3D(0.5,-0.5,0.5), white),
+                new Vertex(new Point3D(-0.5,-0.5,0.5), white)
         );
 
         indices = List.of(
