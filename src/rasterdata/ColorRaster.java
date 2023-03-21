@@ -2,7 +2,6 @@ package rasterdata;
 
 import transforms.Col;
 
-import javax.swing.text.html.Option;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
@@ -53,9 +52,5 @@ public class ColorRaster implements Raster<Col>{
 
     public void present(Graphics g){
         g.drawImage(image, 0, 0, null);
-    }
-
-    public BufferedImage getImage() {
-        return image;
     }
 }

@@ -291,4 +291,11 @@ public class Canvas3D {
     public void start(){
         display();
     }
+
+    public static void main(String[] args) {
+
+        Canvas3D canvas = new Canvas3D(500,500);
+        canvas.start();
+
+    }
 }
